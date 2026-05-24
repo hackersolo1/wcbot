@@ -4,7 +4,7 @@ require('dotenv').config();
 
 
 
-const bot = new TelegramBot(process.env.TG_TOKEN, { polling: true });
+const bot = new TelegramBot(process.env.TG_TOKEN);
 
 lista = [];
 bot.onText(/\/ajuda/, (msg) => {
