@@ -94,7 +94,7 @@ ${error}`);
 });
 
 bot.onText(/\/listarUsuarios/, async (msg) => {
-    lista = [];
+    const lista = [];
     try {
         const connection = await mysql.createConnection({
             host: process.env.DB_HOST,
