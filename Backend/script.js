@@ -130,7 +130,7 @@ Sistema corporativo de automação para notificações internas da Icomon.
 
 Desenvolvido por Paulo G.
 Contato técnico:
-📞 (41) 99865-6934`);
+📞 41998656934`);
 });
 
 const express = require('express');
