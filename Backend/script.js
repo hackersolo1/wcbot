@@ -105,7 +105,7 @@ bot.onText(/\/listarUsuarios/, async (msg) => {
 
         const [rows] = await connection.query('SELECT chat_id, username FROM users');
         rows.forEach((d) => {
-            const m = `Chat_ID: ${rows.chat_id} | Username: @${username || "Nome de usuário desconhecido"}`;
+            const m = `Chat_ID: ${rows.chat_id} | Username: @${rows.username || "Nome de usuário desconhecido"}`;
             lista.push(m);
         });
         bot.message(msg.chat.id, `Lista de todos os usuários \n\n:
