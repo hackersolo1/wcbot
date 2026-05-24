@@ -108,7 +108,7 @@ bot.onText(/\/listarUsuarios/, async (msg) => {
             const m = `Chat_ID: ${rows.chat_id} | Username: @${rows.username || "Nome de usuário desconhecido"}`;
             lista.push(m);
         });
-        bot.message(msg.chat.id, `Lista de todos os usuários \n\n:
+        bot.sendMessage(msg.chat.id, `Lista de todos os usuários \n\n:
 ${lista}`);
     } catch (error) {
         console.error('Erro ao listar usuários:', error);
