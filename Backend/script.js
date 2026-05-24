@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const bot = new TelegramBot(process.env.TG_TOKEN, {polling: true});
 
-lista = [];
+
 bot.onText(/\/ajuda/, (msg) => {
     const helpMessage = `
 Aqui estão os comandos disponíveis:
@@ -94,6 +94,7 @@ ${error}`);
 });
 
 bot.onText(/\/listarUsuarios/, async (msg) => {
+    lista = [];
     try {
         const connection = await mysql.createConnection({
             host: process.env.DB_HOST,
