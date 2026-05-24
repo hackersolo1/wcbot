@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const bot = new TelegramBot(process.env.TG_TOKEN, { polling: true });
 
+lista = [];
 bot.onText(/\/ajuda/, (msg) => {
     const helpMessage = `
 Aqui estão os comandos disponíveis:
@@ -17,6 +18,8 @@ Comandos disponíveis:
 /cadastro - Cria um novo cadastro para seu número de telefone
 
 /enviarMensagem - Envia uma mensagem para um número de telefone específico. Insira o ID do usuário e a mensagem após o comando, separados por um espaço. Exemplo: /enviarMensagem 1234567890 Oi, tudo bem?
+
+/listarUsuarios - Lista os ID's e nome de usuários (usernames) de todos os usuários já registrados. Cuidado: a lista pode ser grande!
 `;
     bot.sendMessage(msg.chat.id, helpMessage);
 });
@@ -84,6 +87,32 @@ bot.onText(/\/enviarMensagem/, async (msg) => {
     } catch (error) {
         console.error('Erro ao conectar ao banco de dados:', error);
         bot.sendMessage(msg.chat.id, `Ocorreu um erro ao tentar enviar a mensagem.
+
+Informações técnicas (ignore isso se não for programador): 
+${error}`);
+    }
+});
+
+bot.onText(/\/listarUsuarios/, async (msg) => {
+    try {
+        const connection = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            port: process.env.DB_PORT,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE
+        });
+
+        const [rows] = await connection.query('SELECT chat_id, username FROM users');
+        rows.forEach((d) => {
+            const m = `Chat_ID: ${rows.chat_id} | Username: @${username || "Nome de usuário desconhecido"}`;
+            lista.push(m);
+        });
+        bot.message(msg.chat.id, `Lista de todos os usuários \n\n:
+${lista}`);
+    } catch (error) {
+        console.error('Erro ao listar usuários:', error);
+        bot.sendMessage(chatId, `Ocorreu um erro listar os usuários.
 
 Informações técnicas (ignore isso se não for programador): 
 ${error}`);
