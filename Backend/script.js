@@ -112,7 +112,7 @@ bot.onText(/\/listarUsuarios/, async (msg) => {
 ${lista}`);
     } catch (error) {
         console.error('Erro ao listar usuários:', error);
-        bot.sendMessage(chatId, `Ocorreu um erro listar os usuários.
+        bot.sendMessage(msg.chat.id, `Ocorreu um erro listar os usuários.
 
 Informações técnicas (ignore isso se não for programador): 
 ${error}`);
