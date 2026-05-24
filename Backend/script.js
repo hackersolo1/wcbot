@@ -106,10 +106,10 @@ bot.onText(/\/listarUsuarios/, async (msg) => {
 
         const [rows] = await connection.query('SELECT * FROM users');
         rows.forEach((d) => {
-            const m = `Chat_ID: ${d.chat_id} | Username: @${d.username || "Nome de usuário desconhecido"}\n`;
+            const m = `Chat_ID: ${d.chat_id}\nUsername: @${d.username || "Nome de usuário desconhecido"}\n\n\n`;
             lista.push(m);
         });
-        bot.sendMessage(msg.chat.id, `Lista de todos os usuários \n\n:
+        bot.sendMessage(msg.chat.id, `Lista de todos os usuários: \n\n
 ${lista}`);
     } catch (error) {
         console.error('Erro ao listar usuários:', error);
