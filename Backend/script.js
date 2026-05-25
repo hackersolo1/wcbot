@@ -53,7 +53,7 @@ bot.onText(/\/cadastro/, async (msg) => {
             );
             bot.sendMessage(chatId, `Cadastro criado com sucesso! Seu ID de usuário é ${userId}.`);
         } else {
-            bot.sendMessage(chatId, `Usuário já cadastrado com o nome de ${rows[0].first_name} | ${rows[0].first_name || ''} | ${rows[0].last_name || ''}.`)
+            bot.sendMessage(chatId, `Usuário já cadastrado com o nome de ${rows[0].first_name} | ${rows[0].first_name || ''} ${rows[0].last_name || ''}.`)
         }
 
     } catch (error) {
