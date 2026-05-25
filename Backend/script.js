@@ -7,6 +7,9 @@ require('dotenv').config();
 const bot = new TelegramBot(process.env.TG_TOKEN, {polling: true});
 
 
+// ======================
+// /ajuda
+// =======================
 bot.onText(/\/ajuda/, (msg) => {
     const helpMessage = `
 Aqui estão os comandos disponíveis:
@@ -24,6 +27,10 @@ Comandos disponíveis:
     bot.sendMessage(msg.chat.id, helpMessage);
 });
 
+
+// ======================
+// /cadastro
+// =======================
 bot.onText(/\/cadastro/, async (msg) => {
     const chatId = msg.chat.id;
     const userId = msg.from.id;
@@ -46,7 +53,7 @@ bot.onText(/\/cadastro/, async (msg) => {
             );
             bot.sendMessage(chatId, `Cadastro criado com sucesso! Seu ID de usuário é ${userId}.`);
         } else {
-            bot.sendMessage(chatId, `Usuário já cadastrado com o nome de ${rows[0].first_name}.`)
+            bot.sendMessage(chatId, `Usuário já cadastrado com o nome de ${rows[0].first_name} | ${rows[0].first_name || ''} | ${rows[0].last_name || ''}.`)
         }
 
     } catch (error) {
@@ -58,6 +65,11 @@ ${error}`);
     }
 });
 
+
+
+// ======================
+// /start
+// =======================
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, `Bem-vindo, ${msg.from.first_name}! Use /ajuda para ver os comandos disponíveis.`);
 });
@@ -66,6 +78,10 @@ bot.onText(/\/enviarMensagem/, async (msg) => {
     const args = msg.text.split(' ');
     const chatId = args[1];
     const message = args.slice(2).join(' ');
+    if(!message) {
+        bot.sendMessage(msg.chat.id, 'Insira o ID e/ou a mensagem!');
+        return;
+    }
 
     try {
         const connection = await mysql.createConnection({
@@ -78,7 +94,7 @@ bot.onText(/\/enviarMensagem/, async (msg) => {
         const result = await connection.query(
             'SELECT * FROM users WHERE chat_id = ?',
             [chatId]
-        );
+        );        
         if (result[0].length > 0) {
             bot.sendMessage(chatId, message);
         } else {
@@ -93,6 +109,11 @@ ${error}`);
     }
 });
 
+
+
+// ======================
+// /listarUsuarios
+// =======================
 bot.onText(/\/listarUsuarios/, async (msg) => {
     const lista = [];
     try {
@@ -106,7 +127,7 @@ bot.onText(/\/listarUsuarios/, async (msg) => {
 
         const [rows] = await connection.query('SELECT * FROM users');
         rows.forEach((d) => {
-            const m = `Chat_ID: ${d.chat_id}\nUsername: @${d.username || "Nome de usuário desconhecido"}\n\n\n`;
+            const m = `Chat_ID: ${d.chat_id}\nUsername: @${d.username || "Nome de usuário desconhecido"}\nNome: ${d.first_name || "Sem nome"}\nSobrenome: ${d.last_name || "Sem sobrenome"}\n\n\n`;
             lista.push(m);
         });
         bot.sendMessage(msg.chat.id, `Lista de todos os usuários: \n\n
