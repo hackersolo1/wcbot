@@ -81,7 +81,7 @@ bot.onText(/\/start/, async (msg) => {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE
     });
-    const [rows] = await connection.query('SELECT * FROM users');
+    const [rows] = await connection.query('SELECT * FROM users WHERE chat_id = ?', [msg.chat.id]);
     if(rows.length > 0) {
         bot.sendMessage(msg.chat.id, `Parece que você já tem cadastro:
 Seu Chat_ID: ${rows[0].chat_id}
