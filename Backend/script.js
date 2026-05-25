@@ -23,6 +23,8 @@ Comandos disponíveis:
 /enviarMensagem - Envia uma mensagem para um número de telefone específico. Insira o ID do usuário e a mensagem após o comando, separados por um espaço. Exemplo: /enviarMensagem 1234567890 Oi, tudo bem?
 
 /listarUsuarios - Lista os ID's e nome de usuários (usernames) de todos os usuários já registrados. Cuidado: a lista pode ser grande!
+
+/dev - Sobre o bot
 `;
     bot.sendMessage(msg.chat.id, helpMessage);
 });
@@ -139,6 +141,17 @@ ${lista}`);
 Informações técnicas (ignore isso se não for programador): 
 ${error}`);
     }
+});
+
+bot.onText(/\/dev/, (msg) => {
+    bot.sendMessage(msg.chat.id, `
+WcBot v1.0
+
+Sistema corporativo de automação para notificações internas da Icomon.
+
+Desenvolvido por Paulo G.
+Contato técnico:
+📞 (41) 99865-6934`);
 });
 
 const express = require('express');
