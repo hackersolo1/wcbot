@@ -4,7 +4,7 @@ require('dotenv').config();
 
 
 
-const bot = new TelegramBot(process.env.TG_TOKEN, {polling: true});
+const bot = new TelegramBot(process.env.TG_TOKEN, { polling: true });
 
 
 // ======================
@@ -13,7 +13,7 @@ const bot = new TelegramBot(process.env.TG_TOKEN, {polling: true});
 bot.onText(/\/ajuda/, (msg) => {
     const helpMessage = `
 Aqui estão os comandos disponíveis:
-Comandos disponíveis:
+
 /ajuda - Mostra esta mensagem de ajuda
 
 /start - Inicia o bot
@@ -72,15 +72,35 @@ ${error}`);
 // ======================
 // /start
 // =======================
-bot.onText(/\/start/, (msg) => {
-    bot.sendMessage(msg.chat.id, `Bem-vindo, ${msg.from.first_name}! Use /ajuda para ver os comandos disponíveis.`);
+bot.onText(/\/start/, async (msg) => {
+    bot.sendMessage(msg.chat.id, `Bem-vindo, ${msg.from.first_name}! Verificando se você já tem cadastro. Aguarde...`);
+    const connection = await mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        port: process.env.DB_PORT,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE
+    });
+    const [rows] = await connection.query('SELECT * FROM users');
+    if(rows.length > 0) {
+        bot.sendMessage(msg.chat.id, `Parece que você já tem cadastro:
+Seu Chat_ID: ${rows[0].chat_id}
+Use /ajuda para ver os comandos disponíveis.`);
+    } else {
+        bot.sendMessage(msg.chat.id, 'Parece que você ainda não se cadastrou. Use /cadastro para registrar seu número ou /ajuda para ver os comandos disponíveis.')
+    }
 });
 
+
+
+// ======================
+// /enviarMensagem
+// =======================
 bot.onText(/\/enviarMensagem/, async (msg) => {
     const args = msg.text.split(' ');
     const chatId = args[1];
     const message = args.slice(2).join(' ');
-    if(!message) {
+    if (!message) {
         bot.sendMessage(msg.chat.id, 'Insira o ID e/ou a mensagem!');
         return;
     }
@@ -96,7 +116,7 @@ bot.onText(/\/enviarMensagem/, async (msg) => {
         const result = await connection.query(
             'SELECT * FROM users WHERE chat_id = ?',
             [chatId]
-        );        
+        );
         if (result[0].length > 0) {
             bot.sendMessage(chatId, message);
         } else {
