@@ -1,4 +1,4 @@
-const TelegramBot = require('node-telegram-bot-api');
+const { TelegramBot } = require('node-telegram-bot-api');
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
@@ -82,7 +82,7 @@ bot.onText(/\/start/, async (msg) => {
         database: process.env.DB_DATABASE
     });
     const [rows] = await connection.query('SELECT * FROM users WHERE chat_id = ?', [msg.chat.id]);
-    if(rows.length > 0) {
+    if (rows.length > 0) {
         bot.sendMessage(msg.chat.id, `Parece que você já tem cadastro:
 Seu Chat_ID: ${rows[0].chat_id}
 Use /ajuda para ver os comandos disponíveis.`);
